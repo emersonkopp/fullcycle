@@ -1,15 +1,20 @@
-FROM node:21.7.3-alpine
+FROM node:21
 
 WORKDIR /usr/src/app
 
 ENV DOCKERIZE_VERSION v0.7.0
 
-RUN apk update --no-cache \
-    && apk add --no-cache wget openssl \
+RUN apt-get update \
+    && apt-get install -y wget \
     && wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
-    && apk del wget 
+    && apt-get autoremove -yqq --purge wget \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+COPY index.js .
+COPY package.json .
+COPY package-lock.json .
+
+RUN npm install
 
 EXPOSE 3000
 
