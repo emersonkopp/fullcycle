@@ -41,17 +41,7 @@ services:
     nginx:
         build:
             context: nginx
-        image: nginx:1.25.4-alpine-slim
         container_name: nginx
-        entrypoint:
-            - /usr/local/bin/dockerize
-            - -wait
-            - http://app:3000
-            - -timeout
-            - 30s
-            - nginx
-            - -g
-            - daemon off;
         networks:
             - node-network
         ports:
